@@ -6,7 +6,7 @@ dnf -y install wget
 SCRIPT
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/8"
-  config.vm.synced_folder ".", "/vagrant", type: 'virtualbox'
+  config.vm.synced_folder "./shared", "/vagrant", type: 'virtualbox'
   config.vbguest.installer_options = { allow_kernel_upgrade: true, reboot_timeout: 5000 }
   config.vm.provision "shell", inline: $script
   for i in 9180..9280
