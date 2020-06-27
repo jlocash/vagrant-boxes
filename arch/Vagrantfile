@@ -1,0 +1,17 @@
+
+$script = <<-SCRIPT
+pacman -Syu --noconfirm
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "archlinux/archlinux"
+  config.vm.synced_folder ".", "/vagrant", type: 'virtualbox'
+  config.vbguest.installer_options = { allow_kernel_upgrade: true, reboot_timeout: 5000 }
+  config.vm.provision "shell", inline: $script
+
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  end
+end
