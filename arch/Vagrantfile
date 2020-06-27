@@ -1,12 +1,13 @@
 
 $provision = <<-SCRIPT
-    pacman -Syu --noconfirm
-    # pacman -S virtualbox-guest-utilsd-nox which
+  pacman -Syu --noconfirm
+  pacman -S linux-headers virtualbox-guest-dkms --noconfirm
 SCRIPT
 
 Vagrant.configure("2") do |config|
   config.vm.box = "archlinux/archlinux"
   config.vm.synced_folder "./shared", "/vagrant", type: 'virtualbox'
+  config.vbguest.auto_update = false
   config.vm.provision "shell", inline: $provision
   config.vm.provider :virtualbox do |vb|
     vb.gui = false
