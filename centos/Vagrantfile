@@ -4,17 +4,19 @@ dnf -y install 'dnf-command(copr)'
 dnf -y copr enable rhcontainerbot/container-selinux
 dnf -y install wget
 SCRIPT
+
 Vagrant.configure("2") do |config|
-  config.vm.box = "centos/8"
-  config.vm.synced_folder "./shared", "/vagrant", type: 'virtualbox'
-  config.vbguest.installer_options = { allow_kernel_upgrade: true, reboot_timeout: 5000 }
+  config.vm.box = "bento/centos-8.2"
+  config.vm.synced_folder "./shared", "/vagrant"
   config.vm.provision "shell", inline: $script
+
   for i in 9180..9280
     config.vm.network :forwarded_port, guest: i, host: i
   end
-  config.vm.provider :virtualbox do |vb|
-    vb.gui = false
-    vb.customize ["modifyvm", :id, "--memory", "2048"]
-    vb.customize ["modifyvm", :id, "--cpus", "2"]
+
+  config.vm.provider "parallels" do |prl|
+    prl.name = "vagrant_centos-8.2"
+    prl.memory = 2048
+    prl.cpus = 2
   end
 end
