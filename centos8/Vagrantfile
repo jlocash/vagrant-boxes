@@ -1,0 +1,23 @@
+$script = <<-SCRIPT
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+dnf -y install 'dnf-command(copr)'
+dnf -y copr enable rhcontainerbot/container-selinux
+dnf -y install wget
+SCRIPT
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/centos8"
+  config.vm.synced_folder "./shared", "/vagrant"
+  config.vm.provision "shell", inline: $script
+  for i in 9180..9280
+    config.vm.network :forwarded_port, guest: i, host: i
+  end
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  end
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+    libvirt.memory = 2048
+  end
+end

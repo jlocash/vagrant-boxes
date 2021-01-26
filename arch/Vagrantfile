@@ -6,12 +6,15 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
   config.vm.box = "archlinux/archlinux"
-  config.vm.synced_folder "./shared", "/vagrant", type: 'virtualbox'
-  config.vbguest.auto_update = false
+  config.vm.synced_folder "./shared", "/vagrant"
   config.vm.provision "shell", inline: $provision
   config.vm.provider :virtualbox do |vb|
     vb.gui = false
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--cpus", "2"]
+  end
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+    libvirt.memory = 2048
   end
 end

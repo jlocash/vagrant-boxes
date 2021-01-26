@@ -1,0 +1,15 @@
+# $script = <<-SCRIPT
+# SCRIPT
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/buster64"
+  # config.vm.provision "shell", inline: $script
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--cpus", "4"]
+  end
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 4
+    libvirt.memory = 4096
+  end
+end
